@@ -1,0 +1,33 @@
+name: Build Snake Game APK
+
+on:
+  push:
+    branches: [ main ]          # 推送到 main 分支时触发
+  workflow_dispatch:            # 允许手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.5'
+
+      - name: Build Debug APK
+        run: gradle assembleDebug
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snake-game-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
